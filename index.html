@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Registration Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="wrap">
+
+  <!-- HUD BAR -->
+  <div class="hud-bar">
+    <div class="hud-item"><div class="hud-dot online"></div>SYSTEM ONLINE</div>
+    <div class="hud-item">FIREBASE <span class="hud-val" id="fbStatus">CONNECTING...</span></div>
+    <div class="hud-item">PROJECT <span class="hud-val">EVENT-REG-COLLAGE</span></div>
+    <div class="hud-item" id="clockHud">--:--:--</div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-topbar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <span class="terminal-title">event-registration-portal.exe — FIREBASE CONNECTED</span>
+    </div>
+    <div class="header-body">
+      <div class="sys-badge"><div class="pulse-dot"></div>UNIVERSITY PORTAL v2.5.0</div>
+      <div class="main-title"><span class="c1">EVENT</span><br><span class="c2">REGISTRATION</span></div>
+      <div class="main-sub">Secure your slot // Powered by Firebase Firestore</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box s1"><div class="stat-num c">06</div><div class="stat-lbl">Events Live</div></div>
+    <div class="stat-box s2"><div class="stat-num p" id="regCount">...</div><div class="stat-lbl">Registered</div></div>
+    <div class="stat-box s3"><div class="stat-num g">Free</div><div class="stat-lbl">Entry</div></div>
+    <div class="stat-box s4"><div class="stat-num a">∞</div><div class="stat-lbl">Cloud Scale</div></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- NAME SEARCH PANEL -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="panel search-panel">
+    <div class="panel-header">
+      <div class="panel-icon icon-amber">🔍</div>
+      <div class="panel-title">Registration Lookup</div>
+      <div class="panel-line" style="background:linear-gradient(90deg,rgba(255,183,0,.2),transparent);"></div>
+    </div>
+    <div class="panel-body">
+      <p class="search-desc">// Search by student name to view their registration details and check total registrations</p>
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <span class="search-prefix">&gt;_</span>
+          <input class="finput search-finput" id="searchName" type="text" placeholder="Enter student name to lookup..."/>
+        </div>
+        <button class="search-btn" id="searchBtn">SEARCH</button>
+      </div>
+      <div class="search-result" id="searchResult"></div>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div id="formWrapper">
+
+    <!-- PANEL 1: Identity -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon icon-cyan">👤</div>
+        <div class="panel-title">Identity Module</div>
+        <div class="panel-line"></div>
+      </div>
+      <div class="panel-body">
+        <div class="form-row">
+          <div class="fgroup">
+            <label class="flabel">First Name <span class="req">*</span></label>
+            <input class="finput" id="firstName" type="text" placeholder="Rahul"/>
+            <span class="ferr" id="errFirst">// required field</span>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">Last Name <span class="req">*</span></label>
+            <input class="finput" id="lastName" type="text" placeholder="Sharma"/>
+            <span class="ferr" id="errLast">// required field</span>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="fgroup">
+            <label class="flabel">Email <span class="req">*</span></label>
+            <input class="finput" id="email" type="email" placeholder="user@university.edu"/>
+            <span class="ferr" id="errEmail">// invalid email format</span>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">Phone</label>
+            <input class="finput" id="phone" type="tel" placeholder="+91 98765 43210"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: Academic -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon icon-pink">🎓</div>
+        <div class="panel-title">Academic Profile</div>
+        <div class="panel-line" style="background:linear-gradient(90deg,rgba(255,0,110,.2),transparent);"></div>
+      </div>
+      <div class="panel-body">
+        <div class="form-row">
+          <div class="fgroup">
+            <label class="flabel">Student ID <span class="req">*</span></label>
+            <input class="finput" id="studentId" type="text" placeholder="STU2024001"/>
+            <span class="ferr" id="errId">// required field</span>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">Department <span class="req">*</span></label>
+            <select class="fselect" id="dept">
+              <option value="">-- SELECT --</option>
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electronics</option>
+              <option>Mechanical</option>
+              <option>Civil</option>
+              <option>MBA</option>
+              <option>Other</option>
+            </select>
+            <span class="ferr" id="errDept">// select department</span>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Year of Study <span class="req">*</span></label>
+          <div class="year-grid">
+            <div class="ypill" data-y="FY">FY</div>
+            <div class="ypill" data-y="SY">SY</div>
+            <div class="ypill" data-y="TY">TY</div>
+            <div class="ypill" data-y="Final">FINAL</div>
+            <div class="ypill" data-y="PG">PG</div>
+          </div>
+          <span class="ferr" id="errYear">// select year</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: Events -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-icon icon-purple">⚡</div>
+        <div class="panel-title">Select Event Node</div>
+        <div class="panel-line" style="background:linear-gradient(90deg,rgba(124,58,237,.25),transparent);"></div>
+      </div>
+      <div class="panel-body">
+        <div class="events-grid">
+
+          <div class="ecard" data-ev="Tech Fest 2025">
+            <div class="ecard-top"><div class="ecard-emoji ec1">💻</div><div class="sel-ring"><svg class="tick" width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+            <div class="ecard-name">Tech Fest</div><div class="ecard-date">MAR 15 // 2025</div><div class="ecard-tag tag-c">TECH</div>
+            <div class="seat-info">
+              <div class="seat-bar"><div class="seat-bar-fill"></div></div>
+              <div class="seat-meta"><span class="seat-text">loading...</span><span class="seat-left">—</span></div>
+            </div>
+          </div>
+
+          <div class="ecard" data-ev="Cultural Night">
+            <div class="ecard-top"><div class="ecard-emoji ec2">🎭</div><div class="sel-ring"><svg class="tick" width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+            <div class="ecard-name">Cultural Night</div><div class="ecard-date">MAR 22 // 2025</div><div class="ecard-tag tag-p">CULTURE</div>
+            <div class="seat-info">
+              <div class="seat-bar"><div class="seat-bar-fill"></div></div>
+              <div class="seat-meta"><span class="seat-text">loading...</span><span class="seat-left">—</span></div>
+            </div>
+          </div>
+
+          <div class="ecard" data-ev="AI Workshop">
+            <div class="ecard-top"><div class="ecard-emoji ec3">🤖</div><div class="sel-ring"><svg class="tick" width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+            <div class="ecard-name">AI Workshop</div><div class="ecard-date">APR 02 // 2025</div><div class="ecard-tag tag-v">AI/ML</div>
+            <div class="seat-info">
+              <div class="seat-bar"><div class="seat-bar-fill"></div></div>
+              <div class="seat-meta"><span class="seat-text">loading...</span><span class="seat-left">—</span></div>
+            </div>
+          </div>
+
+          <div class="ecard" data-ev="Sports Day">
+            <div class="ecard-top"><div class="ecard-emoji ec4">🏆</div><div class="sel-ring"><svg class="tick" width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+            <div class="ecard-name">Sports Day</div><div class="ecard-date">APR 10 // 2025</div><div class="ecard-tag tag-g">SPORTS</div>
+            <div class="seat-info">
+              <div class="seat-bar"><div class="seat-bar-fill"></div></div>
+              <div class="seat-meta"><span class="seat-text">loading...</span><span class="seat-left">—</span></div>
+            </div>
+          </div>
+
+          <div class="ecard" data-ev="Hackathon 24H">
+            <div class="ecard-top"><div class="ecard-emoji ec5">⚡</div><div class="sel-ring"><svg class="tick" width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+            <div class="ecard-name">Hackathon</div><div class="ecard-date">APR 18 // 2025</div><div class="ecard-tag tag-a">24HR</div>
+            <div class="seat-info">
+              <div class="seat-bar"><div class="seat-bar-fill"></div></div>
+              <div class="seat-meta"><span class="seat-text">loading...</span><span class="seat-left">—</span></div>
+            </div>
+          </div>
+
+          <div class="ecard" data-ev="Photography Contest">
+            <div class="ecard-top"><div class="ecard-emoji ec6">📷</div><div class="sel-ring"><svg class="tick" width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-5" stroke="#030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+            <div class="ecard-name">Photography</div><div class="ecard-date">APR 25 // 2025</div><div class="ecard-tag tag-o">ART</div>
+            <div class="seat-info">
+              <div class="seat-bar"><div class="seat-bar-fill"></div></div>
+              <div class="seat-meta"><span class="seat-text">loading...</span><span class="seat-left">—</span></div>
+            </div>
+          </div>
+
+        </div>
+        <span class="ferr" id="errEvent" style="margin-bottom:10px;">// select one event node</span>
+        <div class="divider"></div>
+        <div class="fgroup">
+          <label class="flabel">Additional Message</label>
+          <textarea class="ftextarea" id="message" placeholder="// any notes, requirements, or queries..."></textarea>
+        </div>
+      </div>
+      <div class="submit-wrap">
+        <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">
+          <span id="btnText">INITIALIZE REGISTRATION</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-hex">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+        <path d="M5 15l7 7 13-13" stroke="#00ff88" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="s-title">ACCESS GRANTED</div>
+    <div class="s-sub">Registration written to Firestore.<br>Your data is safely stored in the cloud.</div>
+    <div class="s-badge" id="sEvent">TECH FEST 2025</div><br>
+    <div class="s-regid" id="sRegId">DOC-XXXXXXXX</div>
+    <div class="s-detail" id="sDetail"></div>
+    <button class="reg-again-btn" onclick="resetForm()">[ REGISTER ANOTHER ]</button>
+  </div>
+
+</div>
+
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
